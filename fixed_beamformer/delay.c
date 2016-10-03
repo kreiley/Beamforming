@@ -32,6 +32,7 @@ static struct fract_delay {
     double n_fract;     /*fractional part of the delay*/
     double *rdPtr;      /*delay read pointer*/
     double *wrtPtr;     /*delay write pointer*/
+    int mic;		/*microphone number */
 };
 
 static struct fract_delay del;
@@ -39,11 +40,12 @@ static struct fract_delay del;
 /*
 This function is used to initialize the delay object
 */
-void Delay_Init(double delay_samples,double dfb,double dfw, double dmix) {
+void Delay_Init(double delay_samples,double dfb,double dfw, double dmix, int mic) {
 	Delay_set_delay(delay_samples);
 	Delay_set_fb(dfb);
 	Delay_set_fw(dfw);
-	Delay_set_mix(dmix);	
+	Delay_set_mix(dmix);
+	Delay_set_mic(mic);	
 	del.wrtPtr = &d_buffer[MAX_BUF_SIZE-1];
 }
 
@@ -72,6 +74,10 @@ void Delay_set_delay(double n_delay) {
     del.n_fract = (n_delay - del.d_samples);	
 }
 
+void Delay_set_mic(int mic){
+	del.mic = mic;
+}
+
 double Delay_get_fb(void) {
     return del.d_fb;
 }
@@ -83,6 +89,8 @@ double Delay_get_fw(void) {
 double Delay_get_mix(void) {
     return del.d_mix;
 }
+
+
 
 /*
 This is the main delay task,

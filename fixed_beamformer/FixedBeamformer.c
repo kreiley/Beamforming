@@ -71,7 +71,8 @@ void calculate_delay(double angle){
 		for(int i = 0; i < num_mics; i++){
 			double b = mics[i].y - mics[i].x ;
 			double x;
-			x = -b/2;
+			if(mics[i].y - mics[i].x == 0) {x = 0; b =0;}
+			else{x = -b/2;}
 			double y = -1 * x;
 			double c = sqrt(2)* x;
 			printf("\nb = %f, x = %f, y=%f,c=%f",b,x,y,c);
@@ -83,7 +84,8 @@ void calculate_delay(double angle){
 		for(int i = 0; i < num_mics; i++){
 			double b = mics[i].y + mics[i].x ;
 			double x;
-			x = b/2;
+			if(mics[i].y + mics[i].x == 0) {x = 0; b =0;}
+			else{x = b/2;}
 			double y = x;
 			double c = sqrt(2)* x;
 			printf("\nb = %f, x = %f, y=%f,c=%f",b,x,y,c);

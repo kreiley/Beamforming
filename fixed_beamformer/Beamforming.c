@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include "delay.h"
 #include "FixedBeamformer.h"
 #include "delaytest.h"
@@ -22,13 +23,37 @@ int main(void)
 	for(int i =0; i<number_of_mics; i++){
 		double time_of_delay = get_current_delay(i)/speed_of_sound;
 		double num_of_samples_to_delay = (freq * get_current_delay(i))/speed_of_sound;
-		fractional_delay(fmod(num_of_samples_to_delay, 1));
+	//	fractional_delay(fmod(num_of_samples_to_delay, 1));
 		printf("\n\nMicrophone %d:\n",i);
 		printf("Distance of mic in meters from furthest mic from Audio Source:%f\n",get_current_delay(i));
 		printf("Time of delay in seconds: %f\n", time_of_delay);
 		printf("Number of Samples to delay: %f \n\n",num_of_samples_to_delay);
 	}
-	return 0;
+	for(int i =0; i < number_of_mics; i++){
+		Delay_Init((freq * get_current_delay(i))/speed_of_sound,1, 1,1, i);
+	}
+
+	double *y= (double *) malloc(8*180*sizeof(double));
+	double *y_delayed = (double *) malloc(8*180*sizeof(double));
+	int x = 0;
+	printf("reached");
+		Delay_Init((freq * .5)/speed_of_sound, 1,1,1,1);
+		
+		for(double i = 0; i*M_PI/180 < 4*M_PI; i = i + 1){
+			y[x] = sin(i*M_PI/180);
+			//printf("%f ", y[x]);
+			y_delayed[x] = Delay_task(y[x]);
+			x+=1;
+		}
+		//printf("reached");
+
+		for(int i = 0; i < 4*180; i++){
+			printf("%f\n",y[i]);
+		}
+		printf("\n\n---------DELAYED----------\n\n");	
+		for(int i = 0; i < 4*180; i++){
+			printf("%f\n",y_delayed[i]);
+		}
 }
 
 void fractional_delay(double frac_delay){

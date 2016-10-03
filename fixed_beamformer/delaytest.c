@@ -9,7 +9,7 @@ double get_delay(void);
 void delaytest(void) {
     double xin;
     double yout;
-    Delay_Init(get_delay(),0.7,0.7,1);
+    Delay_Init(get_delay(),0.7,0.7,1,1);
 
     while(1) { 
         //if (new_sample_flag()) {
