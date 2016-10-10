@@ -36,34 +36,31 @@ int main(int argc, char* argv[])
 	for(int i =0; i < number_of_mics; i++){
 		double num_of_samples_to_delay = (freq * get_current_delay(i))/speed_of_sound;
 		double fractional = fmod(num_of_samples_to_delay,1);	
-		delays[i] = delay_init((freq * get_current_delay(i))/speed_of_sound,fractional, 1, 1,1, i);
+		delays[i] = delay_init((freq * get_current_delay(i))/speed_of_sound,fractional, 1, .4,.4, i);
 	}
+	double * y_mic[number_of_mics];
+	double * y = malloc(8*180*sizeof(double));
+	for (int g = 0; g < number_of_mics; g++){
+		double *y_delayed = malloc(8*180*sizeof(double));
+		int x = 0;
+		for(double i = 0; i*M_PI/180 < 4*M_PI; i = i + 1){
+			y[x] = sin(i*M_PI/180);
+			y_delayed[x] = delay_out(delays[g], y[x]);
+			x+=1;
+		}
+		printf("\n%f\n", y_delayed[0]);
+		y_mic[g] = y_delayed;
 
-	double *y= (double *) malloc(8*180*sizeof(double));
-	double *y_delayed = (double *) malloc(8*180*sizeof(double));
-	int x = 0;
-	printf("\nreached\n");
-	double samples = (freq * .5)/speed_of_sound;
-	double samples_frac = fmod(samples, 1);
-		
-	delay *dd = delay_init(samples,samples_frac, 1,.1,.1,1);
-		
-	for(double i = 0; i*M_PI/180 < 4*M_PI; i = i + 1){
-		y[x] = sin(i*M_PI/180);
-		//printf("%f ", y[x]);
-		y_delayed[x] = delay_out(dd, y[x]);
-		x+=1;
 	}
-	printf("\nreached\n");
-
+	printf("\n---------INPUT-------\n\n");
 	for(int i = 0; i < 4*180; i++){
 		printf("%f\n",y[i]);
 	}
-
-	printf("\n\n---------DELAYED----------\n\n");	
-	
-	for(int i = 0; i < 4*180; i++){
-		printf("%f\n",y_delayed[i]);
+	for(int mic = 0; mic < number_of_mics; mic++){
+		printf("\n---------MICROPHONE %d----------\n\n",mic);	
+		for(int i = 0; i < 4*180; i++){
+			printf("%f\n",y_mic[mic][i]);
+		}
 	}
 }
 

@@ -67,7 +67,7 @@ extern double delay_out(delay *d, double in) {
 		d->read_pointer = d->read_pointer + BUFFER_SIZE - 1;
 	}
 
-	y_previous == d->read_pointer -1;
+	y_previous = d->read_pointer -1;
 	y = d->read_pointer;
 
 	if(y_previous < d->buffer){
