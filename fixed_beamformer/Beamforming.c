@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 	double samples = (freq * .5)/speed_of_sound;
 	double samples_frac = fmod(samples, 1);
 		
-	delay *dd = delay_init(samples,samples_frac, 1,.5,.5,1);
+	delay *dd = delay_init(samples,samples_frac, 1,.1,.1,1);
 		
 	for(double i = 0; i*M_PI/180 < 4*M_PI; i = i + 1){
 		y[x] = sin(i*M_PI/180);
