@@ -7,6 +7,10 @@
 
 #define ANGLE_RESOLUTION 500    // Number of angle points to calculate
 #define number_of_mics 8
+#define feedback_volume .4
+#define mix_volume .35
+#define blend_parameter .4
+
 
 double freq = 16000; //frequency of data input
 double speed_of_sound = 340.3; //speed of sound at sea level
@@ -15,7 +19,6 @@ int filterLength = 11; //Numer of FIR filter taps for fractional delay(shouled b
 delay *delays[number_of_mics];
 
 void fractional_delay(double frac_delay);
-
 int main(int argc, char* argv[])
 {
 	double angle;
@@ -36,7 +39,7 @@ int main(int argc, char* argv[])
 	for(int i =0; i < number_of_mics; i++){
 		double num_of_samples_to_delay = (freq * get_current_delay(i))/speed_of_sound;
 		double fractional = fmod(num_of_samples_to_delay,1);	
-		delays[i] = delay_init((freq * get_current_delay(i))/speed_of_sound,fractional, 1, .4,.4, i);
+		delays[i] = delay_init((freq * get_current_delay(i))/speed_of_sound,fractional, feedback_volume, mix_volume,blend_parameter, i);
 	}
 	double * y_mic[number_of_mics];
 	double * y = malloc(8*180*sizeof(double));
