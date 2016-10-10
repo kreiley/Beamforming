@@ -5,7 +5,7 @@
 
 #define num_mics 8
 
-static struct mic_array{
+typedef struct mic_array{
     	double x;
 	double y;
 	double delay_for_E;
@@ -17,9 +17,9 @@ static struct mic_array{
 	double delay_for_S;
 	double delay_for_SE;
 	double current_delay;
-};
+} mic_array;
 
-static struct mic_array mics[num_mics];
+static mic_array mics[num_mics];
 /*
 double x_positions = {};
 double y_positions = {};
