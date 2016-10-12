@@ -110,7 +110,7 @@ void mic_array_init(){
 		double theta = i * M_PI/4;
 		double a =.01;
 		double b =.8;
-		double shift = .5;
+		double shift = -.5;
 		mics[i].x = a*cos(theta - shift) * exp(b*(theta-shift)); 
 		mics[i].y = a*sin(theta - shift) * exp(b*(theta - shift));
 	}
