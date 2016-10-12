@@ -113,9 +113,11 @@ void mic_array_init(){
 		double shift = .5;
 		mics[i].x = a*cos(theta - shift) * exp(b*(theta-shift)); 
 		mics[i].y = a*sin(theta - shift) * exp(b*(theta - shift));
-		printf("mic = %d, x = %f, y = %f\n", i, mics[i].x, mics[i].y);
 	}
-	
+	printf("\nx =\n");
+	for(int i = 0; i < num_mics; i++){printf("%f\n",mics[i].x);}
+	printf("\ny =\n");
+	for(int i = 0; i < num_mics; i++){printf("%f\n",mics[i].y);}
 }
 
 double get_current_delay(int mic_number){
