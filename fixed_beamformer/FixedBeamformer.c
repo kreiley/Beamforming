@@ -110,8 +110,9 @@ void mic_array_init(){
 		double theta = i * M_PI/4;
 		double a =.01;
 		double b =.8;
-		mics[i].x = a*cos(theta) * exp(b*theta); 
-		mics[i].y = a*sin(theta) * exp(b*theta);
+		double shift = .5;
+		mics[i].x = a*cos(theta - shift) * exp(b*(theta-shift)); 
+		mics[i].y = a*sin(theta - shift) * exp(b*(theta - shift));
 		printf("mic = %d, x = %f, y = %f\n", i, mics[i].x, mics[i].y);
 	}
 	
