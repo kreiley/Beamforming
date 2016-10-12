@@ -10,6 +10,11 @@ typedef struct delay {
 	double delay_blend_param;
 	double delay_tap_mix_volume;
 	double feedback_volume;
+	double thiran_coeff_1;
+	double thiran_coeff_2;
+	double thiran_coeff_3;
+	double prev_in[3];
+	double prev_out[3];
 	double *buffer;
 } delay;
 
