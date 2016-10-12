@@ -23,8 +23,8 @@ int main(int argc, char* argv[])
 {
 	double angle;
 	double volume;
-	if(argc == 1){angle = atof(argv[0]);}
-	if(argc == 2){angle = atof(argv[0]); volume = atof(argv[1]);}
+	if(argc == 2){angle = atof(argv[1]);}
+	if(argc == 3){angle = atof(argv[1]); volume = atof(argv[2]);}
 	mic_array_init();
 	calculate_delay(angle);
 	for(int i =0; i<number_of_mics; i++){
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 	for (int g = 0; g < number_of_mics; g++){
 		double *y_delayed = malloc(8*180*sizeof(double));
 		int x = 0;
-		for(double i = 0; i*M_PI/180 < 4*M_PI; i = i + 1){
+		for(double i = 0; i*M_PI/180 < 4*M_PI; i = i + 4){
 			y[x] = sin(i*M_PI/180);
 			y_delayed[x] = delay_out(delays[g], y[x]);
 			x+=1;
@@ -56,12 +56,12 @@ int main(int argc, char* argv[])
 
 	}
 	printf("\n---------INPUT-------\n\n");
-	for(int i = 0; i < 4*180; i++){
+	for(int i = 0; i < 180; i++){
 		printf("%f\n",y[i]);
 	}
 	for(int mic = 0; mic < number_of_mics; mic++){
 		printf("\n---------MICROPHONE %d----------\n\n",mic);	
-		for(int i = 0; i < 4*180; i++){
+		for(int i = 0; i < 180; i++){
 			printf("%f\n",y_mic[mic][i]);
 		}
 	}

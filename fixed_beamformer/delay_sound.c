@@ -72,6 +72,7 @@ void delete_delay(delay *d){
 }
 
 extern double delay_out(delay *d, double in) {
+	if(d->num_samples_to_delay == 0){return in;}
 	double out;
 	double * y_previous;
 	double * y;
