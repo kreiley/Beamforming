@@ -40,7 +40,7 @@ double find_source(microphone * m1, microphone * m2, microphone * m3){
 	int third = 0;
 	int num_samples1 = -1;
 	int num_samples2 = -1;
-	for(int i = 0; i < buffer_size; i++){
+	for(int i = buffer_size - 1; i >= 0; i--){
 		if(!done1 && m1->buffer[i] >= threshold){
 			done1 = true;
 			if(!first){first = 1;}

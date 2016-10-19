@@ -20,12 +20,13 @@ typedef struct delay {
 
 
 extern delay * delay_init(double num_samples_to_delay, double fractional_delay, double fb_v, double dtm_v,double blend_param, int mic);
-void delay_set_delay(delay *d, double num_samples_to_delay, double fractional_delay);
+extern void delay_set_delay(delay *d, double num_samples_to_delay, double fractional_delay);
 void delay_set_feedback_volume(delay *d, double fb_v);
 void delay_set_delay_tap_mix_volume(delay *d, double dtm_v);
 void delay_set_mic(delay *d, int mic);
 void delay_set_blend_param(delay *d, double delay_blend_param);
 extern double delay_out(delay *d, double in);
+//extern void change_delay(double angle);
 
 
 #endif

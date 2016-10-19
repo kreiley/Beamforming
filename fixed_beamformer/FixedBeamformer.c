@@ -123,3 +123,11 @@ void mic_array_init(){
 double get_current_delay(int mic_number){
 	return mics[mic_number].current_delay;
 }
+
+double get_x(int mic_number){
+	return mics[mic_number].x;
+}
+
+double get_y(int mic_number){
+	return mics[mic_number].y;
+}

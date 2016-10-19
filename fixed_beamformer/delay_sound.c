@@ -6,7 +6,7 @@
 #define BUFFER_SIZE 64000
 #define ORDER 3
 
-extern delay * delay_init(double num_samples_to_delay, double fractional_delay, double fb_v, double dtm_v, double delay_blend_param, int mic) {
+delay * delay_init(double num_samples_to_delay, double fractional_delay, double fb_v, double dtm_v, double delay_blend_param, int mic) {
 	delay *d;
 	if(((d =  malloc(sizeof(delay))) == NULL)){return NULL;}
 	else{
@@ -71,14 +71,12 @@ void delete_delay(delay *d){
 	}
 }
 
-extern double delay_out(delay *d, double in) {
-	if(d->num_samples_to_delay == 0){return in;}
+double delay_out(delay *d, double in) {
 	double out;
-	double * y_previous;
-	double * y;
 	double x;
-	double x_estimation_of_delay;
-	
+
+	*d->write_pointer = in;
+		
 	/*apply integer part of delay*/
 	d->read_pointer = d->write_pointer - (int)d->num_samples_to_delay;
 
@@ -86,15 +84,7 @@ extern double delay_out(delay *d, double in) {
 	if(d->read_pointer < d->buffer){
 		d->read_pointer = d->read_pointer + BUFFER_SIZE - 1;
 	}
-	/*initialize the read_pointers 1 before one current*/
-	y_previous = d->read_pointer -1;
-	y = d->read_pointer;
 
-	/*loop reader*/
-	if(y_previous < d->buffer){
-		y_previous = y_previous + BUFFER_SIZE;	
-	}
-	
 	x = *(d->read_pointer);
 	out =	  (d->prev_in[0]                   )
 		+ (d->prev_in[1]  * d->thiran_coeff_1)
@@ -111,21 +101,11 @@ extern double delay_out(delay *d, double in) {
 	d->prev_out[1] = d->prev_out[2];
 	d->prev_out[2] = out;
 
-	//x_estimation_of_delay = (*(y_previous) - *(y))*d->fractional_delay + *(y);
-
-	//x = in + x_estimation_of_delay*d->feedback_volume;
-	//*d->write_pointer = in + x_estimation_of_delay*d->feedback_volume;
-	*d->write_pointer = in;
-//	*d->write_pointer = x_estimation_of_delay;
-
 		
-	//out = x*d->delay_blend_param + x_estimation_of_delay*d->delay_tap_mix_volume;
-	//out = x_estimation_of_delay;
 	d->write_pointer = d->write_pointer + 1;
 
 	if((d->write_pointer - &d->buffer[0]) > BUFFER_SIZE - 1) {
 		d->write_pointer = &d->buffer[0];
 	}
-	
 	return out;
 }
