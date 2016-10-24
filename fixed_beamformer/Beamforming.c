@@ -2,17 +2,19 @@
 #include <math.h>
 #include <stdlib.h>
 #include "delay_sound.h"
-#include "FixedBeamformer.h"
 #include "FixedBeamformer.c"
+#include "FixedBeamformer.h"
 #include "localization.h"
 #include <stdbool.h>
+#include "Beamforming.h"
 
 #define ANGLE_RESOLUTION 500    // Number of angle points to calculate
 #define number_of_mics 8
 #define feedback_volume .4
 #define mix_volume .35
 #define blend_parameter .4
-#define buffer_size 64000
+#define buffer_size 100
+#define BUFFER_SIZE 64000
 
 double freq = 16000; //frequency of data input
 double speed_of_sound = 340.3; //speed of sound at sea level
@@ -24,13 +26,12 @@ char mode = 'M';
 microphone * m1;
 microphone * m2;
 microphone * m3;
-delay *delays[number_of_mics];
 
 void run(double * in);
 void delays_init();
 void localization_init();
 void change_delay();
-double locate();
+double locate(double * buffer1, double * buffer2, double * buffer3, int buf_size);
 void sin_test();
 void print_delay_info();
 
@@ -50,6 +51,9 @@ void run(double * in){
 	double sum = 0;
 	double output = 0;
 	int buf = 0;
+	double * buffer1 = malloc(sizeof(double *) * buffer_size);
+	double * buffer2 = malloc(sizeof(double *) * buffer_size);
+	double * buffer3 = malloc(sizeof(double *) * buffer_size);
 	while(!turn_off){
 		double sum;
 		sum = delay_out(delays[0], in[0]);	
@@ -62,8 +66,11 @@ void run(double * in){
 		sum+= delay_out(delays[7], in[7]);
 		output = sum/number_of_mics;
 		buf++;
+		buffer1[buf] = in[4];
+		buffer2[buf] = in[6];
+		buffer3[buf] = in[7];
 		if(buf == buffer_size){
-			angle = locate();
+			angle = locate(buffer1, buffer2, buffer3, buffer_size);
 			change_delay();
 			buf = 0;
 		}
@@ -80,9 +87,9 @@ void delays_init(){
 }
 
 void localization_init(){
-	m1 = build_mic(get_x(4), get_y(4), delays[4]->buffer);
-	m2 = build_mic(get_x(6), get_y(6), delays[6]->buffer);
-	m3 = build_mic(get_x(7), get_y(7), delays[7]->buffer);
+	m1 = build_mic(get_x(4), get_y(4));
+	m2 = build_mic(get_x(6), get_y(6));
+	m3 = build_mic(get_x(7), get_y(7));
 	init_triangle(m1,m2,m3);
 	set_buffer_size(buffer_size);
 
@@ -97,7 +104,11 @@ void change_delay(){
 	}
 }
 
-double locate(){
+double locate(double * buffer1, double * buffer2, double * buffer3, int buf_size){
+	set_buffer(m1, buffer1);
+	set_buffer(m2, buffer2);
+	set_buffer(m3, buffer3);
+	set_buffer_size(buf_size);
 	return find_source(m1,m2,m3);
 }
 
@@ -127,7 +138,7 @@ void sin_test(){
 		y_mic[g] = y_delayed;
 
 	}
-	printf("\n\n:::::::ANGLE = %f::::::::::\n\n", locate());
+	printf("\n\n:::::::ANGLE = %f::::::::::\n\n", locate(y_mic[4], y_mic[6], y_mic[7],buffer_size));
 	printf("\n---------INPUT-------\n\n");
 	for(int i = 0; i < 180; i++){
 		printf("%f\n",y[i]);

@@ -2,13 +2,14 @@
 #include "math.h"
 #include "FixedBeamformer.h"
 #include <stdlib.h>
+#include "Beamforming.h"
 
 #define BUFFER_SIZE 64000
 #define ORDER 3
 
 delay * delay_init(double num_samples_to_delay, double fractional_delay, double fb_v, double dtm_v, double delay_blend_param, int mic) {
-	delay *d;
-	if(((d =  malloc(sizeof(delay))) == NULL)){return NULL;}
+	delay *d = malloc (sizeof(delay));
+	if(d == NULL){return NULL;}
 	else{
 		d->buffer = malloc(sizeof (double) * BUFFER_SIZE);
 		if(d->buffer == NULL){return NULL;}
